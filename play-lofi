@@ -1,0 +1,131 @@
+#!/bin/sh
+# Copyright (C) 2020 Ortega Froysa, Nicolás <nicolas@ortegas.org> All rights reserved.
+# Author: Ortega Froysa, Nicolás <nicolas@ortegas.org>
+#
+# This software is provided 'as-is', without any express or implied
+# warranty. In no event will the authors be held liable for any damages
+# arising from the use of this software.
+#
+# Permission is granted to anyone to use this software for any purpose,
+# including commercial applications, and to alter it and redistribute it
+# freely, subject to the following restrictions:
+#
+# 1. The origin of this software must not be misrepresented; you must not
+#    claim that you wrote the original software. If you use this software
+#    in a product, an acknowledgment in the product documentation would be
+#    appreciated but is not required.
+#
+# 2. Altered source versions must be plainly marked as such, and must not be
+#    misrepresented as being the original software.
+#
+# 3. This notice may not be removed or altered from any source
+#    distribution.
+
+link_file="$XDG_CONFIG_HOME/lofi-link"
+
+print_help() {
+	echo "USAGE: play-lofi [commands]
+A program to play a lofi stream from Invidious (a YouTube proxy). When
+given no options, it plays from the stream URL in '\$XDG_CONFIG_HOME/
+lofi-link'. If the file does not exist it will give you a selection of
+streams to choose from.
+
+Commands:
+	new         choose a new stream URL
+	set <url>   set stream URL
+	help        show this help information"
+}
+
+new_link() {
+	local results=$(curl -s "https://invidio.us/search?q=lofi+radio" |
+		grep "<p>.*watch" | tr -d "\n" | tr -s " ")
+	results=${results//\<p\>\<a href\=\"/\"https:\/\/invidio.us}
+	results=${results//\"\>/\" \"}
+	results=${results//\<\/a\>\<\/p\>/\" þ }
+	results=${results::-2} # remove that last separator
+
+	# NOTE: I chose þ because never in a million years will that
+	# character be in the title of a lofi video stream.
+	IFS="þ" read -r -a streams <<< $results
+
+	echo "Streams:"
+	local id=1
+	for i in "${streams[@]}"
+	do
+		title=${i//*\" \"/\"}
+		echo "$id) ${title:1:-2}"
+		((id++))
+	done
+	opt=0
+	while [ "$opt" -gt "${#streams[@]}" ] || [ "$opt" -lt "1" ]
+	do
+		printf "Selection: "
+		read opt
+	done
+	link=${streams[$opt]}
+	link=${link//\" \"*/}
+	link=${link//*\"/}
+	echo $link > $link_file
+}
+
+# argument parsing
+if [ "$#" -eq "1" ]
+then
+	case $1 in
+		"help")
+			print_help
+			exit 0;;
+		"new")
+			new_link;;
+		*)
+			echo "Unknown command '$1'. Run 'play-lofi help' for a list of commands."
+			exit 1;;
+	esac
+elif [ "$#" -eq "2" ]
+then
+	if [ "$1" = "set" ]
+	then
+		echo "$2" > $link_file
+		exit 0
+	else
+		echo "Unknown command '$1 $2'. Run 'play-lofi help' for a list of commands."
+		exit 1
+	fi
+elif [ "$#" -gt "2" ]
+then
+	echo "Too many arguments. Run 'play-lofi help' for a list of commands."
+	exit 1
+fi
+
+# check for link file
+if ! [ -e "$link_file" ]
+then
+	echo "No link file found in '$link_file'."
+	while [ "$option" != "y" ] && [ "$option" != "n" ]
+	do
+		printf "Would you like to create one? [y/n] "
+		read option
+	done
+	[ "$option" = "n" ] && exit 1
+	new_link
+	echo "New link file created."
+fi
+
+link=$(cat $link_file)
+
+# check if video is available
+output=$(curl -s $link | grep "This video is unavailable.")
+if [ -n "$output" ]
+then
+	echo "The stream link '$link' is unavailable."
+	while [ "$option" != "y" ] && [ "$option" != "n" ]
+	do
+		printf "Would you like to find a new one? [y/n] "
+		read option
+	done
+	[ "$option" = "n" ] && exit 1
+	new_link
+	echo "New link saved."
+fi
+
+mpv --no-video --msg-level=ffmpeg=no $link

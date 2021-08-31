@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# TODO:
+#  - Add options for port
+#  - Automatically get password from `pass`
+
+PORT=12800
+
+ssh -N -D $PORT nortega@themusicinnoise.net

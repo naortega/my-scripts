@@ -1,0 +1,2 @@
+#!/bin/sh
+install -m 755 $1 $HOME/.local/bin

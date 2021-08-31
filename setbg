@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ $# -ne 1 ] &&
+	echo "Requires an image argument." &&
+	exit 1
+
+cp $1 $HOME/.local/share/wallpaper.jpg
+xwallpaper --zoom $HOME/.local/share/wallpaper.jpg
