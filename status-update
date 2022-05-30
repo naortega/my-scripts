@@ -2,7 +2,7 @@
 
 #DATE="$(date +"%F %H:%M:%S" )"
 DATE="$(date +"%F %H:%M" )"
-NETWORK="eth2: $(cat /sys/class/net/eth2/operstate)"
+NETWORK="eth: $(cat /sys/class/net/enp34s0/operstate)"
 SPACE="$(cat $HOME/.cache/free-space)"
 #vol_out_port="$(cat $HOME/.cache/audio-control/port)"
 vol_status="$(cat $HOME/.cache/audio-control/vol_status)"
