@@ -1,12 +1,9 @@
 #!/bin/sh
 
-#DATE="$(date +"%F %H:%M:%S" )"
 DATE="$(date +"%F %H:%M" )"
 NETWORK="eth: $(cat /sys/class/net/enp34s0/operstate)"
 SPACE="$(cat $HOME/.cache/free-space)"
-#vol_out_port="$(cat $HOME/.cache/audio-control/port)"
 vol_status="$(cat $HOME/.cache/audio-control/vol_status)"
 vol_level="$(cat $HOME/.cache/audio-control/vol_level)%"
-#VOLUME="$vol_out_port $vol_status $vol_level"
 VOLUME="$vol_status $vol_level"
 xsetroot -name "$VOLUME | $NETWORK | $SPACE | $DATE"
