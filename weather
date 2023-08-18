@@ -1,2 +1,2 @@
 #!/bin/sh
-curl "wttr.in/$1?m"
+curl "http://wttr.in/$1?m"
