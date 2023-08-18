@@ -1,8 +1,12 @@
 #!/bin/sh
 
-[ $# -ne 1 ] &&
-	echo "Requires an image argument." &&
+if [ $# -gt 1 ]
+then
+	echo "Too many arguments"
 	exit 1
+fi
 
-cp $1 $HOME/.local/share/wallpaper.jpg
+[ $# -eq 1 ] &&
+	cp $1 $HOME/.local/share/wallpaper.jpg
+
 xwallpaper --zoom $HOME/.local/share/wallpaper.jpg
