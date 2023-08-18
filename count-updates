@@ -1,0 +1,3 @@
+#!/bin/sh
+UPDATES=$(checkupdates | wc -l)
+echo "$UPDATES" > ~/.cache/update_count
