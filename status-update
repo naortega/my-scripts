@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 for ifname in $(ls /sys/class/net/ | grep -v 'lo')
 do
