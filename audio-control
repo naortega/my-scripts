@@ -1,15 +1,21 @@
 #!/bin/bash
 CACHE_DIR="$HOME/.cache/audio-control"
 
-[ "$#" -eq 0 ] &&
-	echo "Requires a command. Run with 'help' for a list of commands." &&
+if [ "$#" -eq 0 ]
+then
+	echo "Requires a command. Run with 'help' for a list of commands."
 	exit 1
-[ "$#" -gt 1 ] &&
-	echo "Too many arguments. Run with 'help' for a list of commands." &&
+fi
+if [ "$#" -gt 1 ]
+then
+	echo "Too many arguments. Run with 'help' for a list of commands."
 	exit 1
+fi
 
-[ -d $CACHE_DIR ] ||
+if ! [ -d $CACHE_DIR ]
+then
 	mkdir -p $CACHE_DIR
+fi
 
 query_outport() {
 	active_port="$(pactl list sinks | grep 'Active Port')"
