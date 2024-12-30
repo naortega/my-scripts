@@ -1,2 +1,2 @@
 #!/bin/bash
-rsync -aAXv / --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found","/usr/local/share/music/*"} $1
+rsync -aAXv --delete "$1" --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found","/media/music/*"} "$2"
