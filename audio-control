@@ -1,5 +1,4 @@
 #!/bin/bash
-CACHE_DIR="$HOME/.cache/audio-control"
 
 if [ "$#" -eq 0 ]
 then
@@ -12,38 +11,23 @@ then
 	exit 1
 fi
 
-if ! [ -d $CACHE_DIR ]
-then
-	mkdir -p $CACHE_DIR
-fi
-
-query_outport() {
-	active_port="$(pactl list sinks | grep 'Active Port')"
-	if [[ $active_port == *"speaker"* ]]
-	then
-		echo "SPK" > $CACHE_DIR/port
-	else
-		echo "HDF" > $CACHE_DIR/port
-	fi
-	pactl list sinks | awk '/Mute/ { if ($2 == "no") print "VOL"; else print "MUT"; }' > $CACHE_DIR/vol_status
-	pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,' > $CACHE_DIR/vol_level
-}
-
 case $1 in
 	"mute")
 		pactl set-sink-mute 0 toggle
-		pactl list sinks | awk '/Mute/ { if ($2 == "no") print "VOL"; else print "MUT"; }' > $CACHE_DIR/vol_status;;
+		pactl list sinks | awk '/Mute/ { if ($2 == "no") print "VOL"; else print "MUT"; }'
+		;;
 	"vol-up")
 		pactl set-sink-volume 0 +5%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,' > $CACHE_DIR/vol_level;;
+		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
+		;;
 	"vol-down")
 		pactl set-sink-volume 0 -5%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,' > $CACHE_DIR/vol_level;;
+		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
+		;;
 	"reset")
 		pactl set-sink-volume 0 50%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,' > $CACHE_DIR/vol_level;;
-	"toggle-port")
-		query_outport;;
+		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
+		;;
 	"help")
 		echo "USAGE: audio-control <command>
 
