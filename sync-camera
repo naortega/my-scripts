@@ -1,0 +1,95 @@
+#!/bin/bash
+
+set -eu
+
+CAMERA_DEVICE=""
+MOUNT_DIR="/tmp/camera-mount"
+OUTPUT_DIR=""
+REMOVE_FILES=0
+
+function print_usage() {
+	echo "USAGE: ${0##*/} -d <device> -o <dir> [-t <dir>] [-r]"
+}
+
+while getopts "d:o:t:rh" opt
+do
+	case "$opt" in
+		'd')
+			CAMERA_DEVICE=${OPTARG}
+			;;
+		'o')
+			OUTPUT_DIR=${OPTARG}
+			;;
+		't')
+			MOUNT_DIR="${OPTARG}"
+			;;
+		'r')
+			REMOVE_FILES=1
+			;;
+		'h')
+			print_usage
+			exit 0
+			;;
+		*)
+			print_usage
+			exit 1
+			;;
+	esac
+done
+
+if [ -z "$CAMERA_DEVICE" ]
+then
+	echo "Failed to set the camera device."
+	exit 1
+fi
+
+if [ -z "$OUTPUT_DIR" ]
+then
+	echo "Failed to set the output directory."
+	exit 1
+fi
+
+if ! mkdir "$MOUNT_DIR"
+then
+	echo "Unable to create mount directory '$MOUNT_DIR'."
+	exit 1
+fi
+if ! sudo mount -o "uid=$(id --user),gid=$(id --group)" "$CAMERA_DEVICE" "$MOUNT_DIR"
+then
+	rmdir "$MOUNT_DIR"
+fi
+
+while IFS= read -r -d '' INPUT_FILE
+do
+	OUTPUT_PATH="$OUTPUT_DIR/${INPUT_FILE##*/}"
+	if ! [ -f "$OUTPUT_PATH" ]
+	then
+		echo "Copying ${INPUT_FILE} to ${OUTPUT_PATH} ..."
+		cp "$INPUT_FILE" "${OUTPUT_PATH::-4}.jpg"
+	fi
+
+	if [ $REMOVE_FILES -eq 1 ]
+	then
+		echo "Removing ${INPUT_FILE} and ${INPUT_FILE::-4}.THM ..."
+		rm -f "$INPUT_FILE" "${INPUT_FILE::-4}.THM"
+	fi
+done < <(find "$MOUNT_DIR" -type f -name '*.JPG' -print0)
+
+while IFS= read -r -d '' INPUT_FILE
+do
+	OUTPUT_PATH="$OUTPUT_DIR/${INPUT_FILE##*/}"
+	if ! [ -f "$OUTPUT_PATH" ]
+	then
+		echo "Converting ${INPUT_FILE} to MP4 at ${OUTPUT_PATH} ..."
+		ffmpeg -loglevel fatal -nostdin -i "$INPUT_FILE" "${OUTPUT_PATH::-4}.mp4"
+	fi
+
+	if [ $REMOVE_FILES -eq 1 ]
+	then
+		echo "Removing ${INPUT_FILE} and ${INPUT_FILE::-4}.THM ..."
+		rm -f "$INPUT_FILE" "${INPUT_FILE::-4}.THM"
+	fi
+done < <(find "$MOUNT_DIR" -type f -name '*.MOV' -print0)
+
+sudo umount "$MOUNT_DIR"
+rmdir "$MOUNT_DIR"
