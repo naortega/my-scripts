@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -euo pipefail
 
 CAMERA_DEVICE=""
 MOUNT_DIR="/tmp/camera-mount"

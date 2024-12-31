@@ -1,2 +1,5 @@
 #!/bin/bash
+
+set -euo pipefail
+
 sync && echo 1 > /proc/sys/vm/drop_caches

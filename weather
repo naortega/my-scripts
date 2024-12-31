@@ -1,2 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
+set -euo pipefail
+
 curl "http://wttr.in/$1?m"

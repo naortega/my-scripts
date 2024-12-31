@@ -1,2 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+
+set -euo pipefail
+
 install -m 755 $1 $HOME/.local/bin

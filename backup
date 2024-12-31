@@ -1,2 +1,5 @@
 #!/bin/bash
+
+set -euo pipefail
+
 rsync -aAXv --delete "$1" --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found","/media/music/*"} "$2"
