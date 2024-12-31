@@ -14,19 +14,15 @@ fi
 case $1 in
 	"mute")
 		pactl set-sink-mute 0 toggle
-		pactl list sinks | awk '/Mute/ { if ($2 == "no") print "VOL"; else print "MUT"; }'
 		;;
 	"vol-up")
 		pactl set-sink-volume 0 +5%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
 		;;
 	"vol-down")
 		pactl set-sink-volume 0 -5%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
 		;;
 	"reset")
 		pactl set-sink-volume 0 50%
-		pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( SINK + 1  )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
 		;;
 	"help")
 		echo "USAGE: audio-control <command>
@@ -37,7 +33,8 @@ Commands:
 	vol-down      lower the volume
 	reset         reset volume (to round number)
 	toggle-port   toggle the output port
-	help          show this help information";;
+	help          show this help information"
+		;;
 	*)
 		echo "Invalid command. Run with 'help' for a list of commands."
 		exit 1;;
