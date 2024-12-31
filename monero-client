@@ -13,9 +13,6 @@ case $1 in
 	"address")
 		echo "42espNaUqPdJK4vTir4NDfH4gT6brFR4F5KPRADrg5t98LkzHnQfFnUDZZEetp3Zw5K8V4v364tN3TMxfg4eXEN9RpnrNBG"
 		;;
-	"mine")
-		xmr-stak-cpu "$XDG_CONFIG_HOME/xmr-stak/cpu-config.txt"
-		;;
 	"help")
 		echo "USAGE: monero-client [command]
 Commands:
