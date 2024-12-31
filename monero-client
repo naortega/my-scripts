@@ -8,18 +8,23 @@ set -euo pipefail
 
 case $1 in
 	"wallet")
-		monero-wallet-cli --daemon-address node.monero.net:13666;;
+		monero-wallet-cli --daemon-address node.monero.net:13666
+		;;
 	"address")
-		echo "42espNaUqPdJK4vTir4NDfH4gT6brFR4F5KPRADrg5t98LkzHnQfFnUDZZEetp3Zw5K8V4v364tN3TMxfg4eXEN9RpnrNBG";;
+		echo "42espNaUqPdJK4vTir4NDfH4gT6brFR4F5KPRADrg5t98LkzHnQfFnUDZZEetp3Zw5K8V4v364tN3TMxfg4eXEN9RpnrNBG"
+		;;
 	"mine")
-		xmr-stak-cpu $XDG_CONFIG_HOME/xmr-stak/cpu-config.txt;;
+		xmr-stak-cpu "$XDG_CONFIG_HOME/xmr-stak/cpu-config.txt"
+		;;
 	"help")
 		echo "USAGE: monero-client [command]
 Commands:
 	address   print out the monero public address
 	mine      start the miner
 	wallet    open the monero wallet
-	help      show this help information";;
+	help      show this help information"
+		;;
 	*)
-		echo "Invalid command '$1'. Please run with the 'help' option.";;
+		echo "Invalid command '$1'. Please run with the 'help' option."
+		;;
 esac
