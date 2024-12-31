@@ -8,7 +8,7 @@ then
 	exit 1
 elif [ $# -eq 1 ]
 then
-	cp $1 $HOME/.local/share/wallpaper.jpg
+	cp "$1" "$HOME/.local/share/wallpaper.jpg"
 fi
 
-xwallpaper --zoom $HOME/.local/share/wallpaper.jpg
+xwallpaper --zoom "$HOME/.local/share/wallpaper.jpg"

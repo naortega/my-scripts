@@ -8,4 +8,4 @@ set -euo pipefail
 
 PORT=12800
 
-ssh -N -D $PORT nortega@themusicinnoise.net
+ssh -N -D "$PORT" nortega@themusicinnoise.net

@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-curl ipinfo.io/$1
+curl "ipinfo.io/$1"
