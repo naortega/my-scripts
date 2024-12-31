@@ -2,4 +2,12 @@
 
 set -euo pipefail
 
-install -m 755 "$1" "$HOME/.local/bin"
+SCRIPT_FILE="$1"
+
+# Remove extension from script
+if [[ $SCRIPT_FILE == *.* ]]
+then
+	SCRIPT_FILE=${SCRIPT_FILE%.*}
+fi
+
+install -m 755 "$SCRIPT_FILE" "$HOME/.local/bin"
