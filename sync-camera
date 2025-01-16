@@ -64,7 +64,7 @@ do
 	OUTPUT_PATH="$OUTPUT_DIR/${INPUT_FILE##*/}"
 	if ! [ -f "$OUTPUT_PATH" ]
 	then
-		echo "Copying ${INPUT_FILE} to ${OUTPUT_PATH} ..."
+		echo "Copying ${INPUT_FILE} to ${OUTPUT_PATH::-4}.jpg ..."
 		cp "$INPUT_FILE" "${OUTPUT_PATH::-4}.jpg"
 	fi
 
@@ -80,7 +80,7 @@ do
 	OUTPUT_PATH="$OUTPUT_DIR/${INPUT_FILE##*/}"
 	if ! [ -f "$OUTPUT_PATH" ]
 	then
-		echo "Converting ${INPUT_FILE} to MP4 at ${OUTPUT_PATH} ..."
+		echo "Converting ${INPUT_FILE} to MP4 at ${OUTPUT_PATH::-4}.mp4 ..."
 		ffmpeg -loglevel fatal -nostdin -i "$INPUT_FILE" "${OUTPUT_PATH::-4}.mp4"
 	fi
 
