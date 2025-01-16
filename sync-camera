@@ -11,6 +11,13 @@ function print_usage() {
 	echo "USAGE: ${0##*/} -d <device> -o <dir> [-t <dir>] [-r]"
 }
 
+if [ $# -eq 0 ]
+then
+	>&2 echo "No arguments specified!"
+	print_usage
+	exit 1
+fi
+
 while getopts "d:o:t:rh" opt
 do
 	case "$opt" in
