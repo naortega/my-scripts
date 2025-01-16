@@ -73,6 +73,7 @@ do
 	then
 		echo "Copying ${INPUT_FILE} to ${OUTPUT_PATH::-4}.jpg ..."
 		cp "$INPUT_FILE" "${OUTPUT_PATH::-4}.jpg"
+		chmod -x "${OUTPUT_PATH::-4}.jpg"
 	fi
 
 	if [ $REMOVE_FILES -eq 1 ]
