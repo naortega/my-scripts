@@ -88,8 +88,12 @@ do
 	OUTPUT_PATH="$OUTPUT_DIR/${INPUT_FILE##*/}"
 	if ! [ -f "$OUTPUT_PATH" ]
 	then
+		echo "Copying $INPUT_FILE to ${OUTPUT_PATH} ..."
+		cp "${INPUT_FILE}" "${OUTPUT_PATH}"
 		echo "Converting ${INPUT_FILE} to MP4 at ${OUTPUT_PATH::-4}.mp4 ..."
-		ffmpeg -loglevel fatal -nostdin -i "$INPUT_FILE" "${OUTPUT_PATH::-4}.mp4"
+		ffmpeg -loglevel fatal -nostdin -i "$OUTPUT_PATH" "${OUTPUT_PATH::-4}.mp4"
+		echo "Removing temporary file $OUTPUT_PATH ..."
+		rm "$OUTPUT_PATH"
 	fi
 
 	if [ $REMOVE_FILES -eq 1 ]
