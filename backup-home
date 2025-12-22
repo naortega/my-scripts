@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -euo pipefail
+
+rsync -aAXv --delete "$HOME/" --exclude=".cache/*" "$1"
