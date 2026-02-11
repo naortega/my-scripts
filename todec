@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -euo pipefail
+
+function assert_format() {
+    if ! [[ "$1" == "0x"* ]]
+    then
+        echo "0x$1"
+    else
+        echo "$1"
+    fi
+}
+
+if [ $# = 1 ]
+then
+    val=$(assert_format "$1")
+    printf "%d\n" "$val"
+elif [ $# -gt 1 ]
+then
+    for i in "$@"
+    do
+        val=$(assert_format "$i")
+        printf "%X = %d\n" "$val" "$val"
+    done
+else
+    echo "Usage: $0 <hexadecimal>"
+fi

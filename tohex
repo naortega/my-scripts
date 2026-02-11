@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ $# = 1 ]
+then
+    printf "%x\n" "$1"
+elif [ $# -gt 1 ]
+then
+    for i in "$@"
+    do
+        printf "%d = 0x%X\n" "$i" "$i"
+    done
+else
+    echo "Usage: $0 <decimal>"
+fi
