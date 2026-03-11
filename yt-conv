@@ -26,9 +26,9 @@ set -euo pipefail
 
 CLIP=0
 
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
-	>&2 echo "Usage: $0 <url>"
+	>&2 echo "Usage: $0 [-c] <url>"
 	exit 1
 fi
 
@@ -77,4 +77,3 @@ else
 		echo "$YT_URL" | xclip -sel clip
 	fi
 fi
-
