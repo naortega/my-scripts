@@ -1,0 +1,67 @@
+#!/bin/bash
+set -euo pipefail
+
+PROG_NAME="kindle-cmd"
+
+print_usage() {
+	echo "$PROG_NAME <command>"
+}
+
+print_help() {
+	print_usage
+
+	echo -e "\nCOMMANDS:"
+	echo -e "\tmount       Mount the device"
+	echo -e "\tumount      Unmount the device"
+	echo -e "\tls          List files on device"
+	echo -e "\tadd <file>  Add file to device"
+	echo -e "\trm <file>   Remove file from device"
+	echo -e "\thelp        Show this help information"
+}
+
+if [ $# -lt 1 ]
+then
+	>&2 echo "No commands given. Use 'help' for information."
+	print_usage
+	exit 1
+fi
+
+COMMAND="$1"
+shift
+
+case "$COMMAND" in
+	"mount")
+		gio mount "mtp://Amazon_Kindle_G093KM075467019V/"
+		;;
+	"umount")
+		gio mount -u "mtp://Amazon_Kindle_G093KM075467019V/"
+		;;
+	"ls")
+		gio list "mtp://Amazon_Kindle_G093KM075467019V/Internal Storage/documents" | grep -v ".sdr"
+		;;
+	"add")
+		if [ $# -ne 1 ]
+		then
+			>&2 echo "Wrong number of arguments. Use 'help' for information."
+			exit 1
+		fi
+		FILE="$1"
+		gio copy "$FILE" "mtp://Amazon_Kindle_G093KM075467019V/Internal Storage/documents/"
+		;;
+	"rm")
+		if [ $# -ne 1 ]
+		then
+			>&2 echo "Wrong number of arguments. Use 'help' for information."
+			exit 1
+		fi
+		FILE="$1"
+		gio remove "mtp://Amazon_Kindle_G093KM075467019V/Internal Storage/documents/$FILE"
+		;;
+	"help")
+		print_help
+		;;
+	*)
+		>&2 echo "Unknown command '$COMMAND'. Use 'help' for information."
+		exit 1
+		;;
+esac
